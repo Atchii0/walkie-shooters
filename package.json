@@ -1,0 +1,20 @@
+{
+  "name": "arena-fps",
+  "version": "0.1.0",
+  "description": "Multiplayer browser arena FPS (Three.js + Socket.IO, server-authoritative)",
+  "type": "module",
+  "main": "server/index.js",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "build:client": "node scripts/build-client.js",
+    "test": "node test/run.js && node test/client.test.js"
+  },
+  "dependencies": {
+    "express": "4.19.2",
+    "socket.io": "4.7.5",
+    "socket.io-client": "4.7.5",
+    "three": "0.160.1"
+  }
+}

@@ -1,0 +1,31 @@
+# Render Blueprint. Deploy with: Dashboard -> New -> Blueprint -> pick this repo.
+services:
+  # 1) Game server. It also serves the client, so this single service is a complete deployment.
+  - type: web
+    name: arena-fps
+    runtime: node
+    plan: free                 # free works for testing; it sleeps after 15 min idle (see README)
+    region: frankfurt          # pick the region closest to your players
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: CLIENT_ORIGIN     # only matters if you host the client separately (service below)
+        value: "*"
+      - key: DATA_DIR
+        value: ./data          # ephemeral on the free plan. With a paid plan + disk, set to /var/data
+    # disk:                    # requires a paid plan (then set DATA_DIR=/var/data)
+    #   name: arena-data
+    #   mountPath: /var/data
+    #   sizeGB: 1
+
+  # 2) OPTIONAL: static frontend on a CDN, talking to the service above.
+  #    Delete this block if you are happy serving the client from the game server.
+  # - type: web
+  #   name: arena-fps-client
+  #   runtime: static
+  #   buildCommand: npm ci && SERVER_URL=https://arena-fps.onrender.com npm run build:client
+  #   staticPublishPath: dist
